@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Post } from './post.model';
 import { element } from 'protractor';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,14 @@ export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<Post[]>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
+
+  navigateOnRouter(path: string) {
+    if (path === '') {
+      path = '/';
+    }
+    this.router.navigate([path]);
+  }
 
   getPost(id: string) {
     return this.http.get<{message: string, post: {_id: string, title: string, content: string}}>(
@@ -57,6 +65,7 @@ export class PostsService {
       .subscribe((postData) => {
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
+        this.navigateOnRouter('');
       });
   }
 
@@ -70,6 +79,7 @@ export class PostsService {
         postUpdated[oldPostId] = post;
         this.posts = postUpdated;
         this.postsUpdated.next([...this.posts]);
+        this.navigateOnRouter('');
       });
   }
 

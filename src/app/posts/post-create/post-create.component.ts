@@ -1,5 +1,5 @@
 import { Component, OnInit} from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
@@ -17,10 +17,26 @@ export class PostCreateComponent implements OnInit {
   private postId: string;
   postToEdit: Post;
   isLoading = false;
+  postForm: FormGroup;
 
   constructor(public servicePosts: PostsService, private route: ActivatedRoute) {}
 
   ngOnInit() {
+
+    this.postForm = new FormGroup({
+      title: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.minLength(3)]
+      }),
+      content: new FormControl(null, {
+        validators: [
+          Validators.required
+        ]
+      }),
+      image: new FormControl(null)
+    });
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
@@ -43,21 +59,30 @@ export class PostCreateComponent implements OnInit {
     });
   }
 
-  onSavePost(postForm: NgForm) {
+  onImageAdded(event: Event) {
+    const file = (event.target as HTMLInputElement).files[0];
+    this.postForm.patchValue({
+      image: file
+    });
+    this.postForm.get('image').updateValueAndValidity();
+    console.log(this.postForm.get('image'));
+  }
+
+  onSavePost() {
     // console.dir(inputPost);
-    if (postForm.invalid) { return; }
+    if (this.postForm.invalid) { return; }
 
     if (this.mode === 'create') {
-      this.servicePosts.addPost(postForm.value.title, postForm.value.content);
+      this.servicePosts.addPost(this.postForm.value.title, this.postForm.value.content);
     } else {
       this.servicePosts.updatePost(
         this.postId,
-        postForm.value.title,
-        postForm.value.content
+        this.postForm.value.title,
+        this.postForm.value.content
       );
     }
     this.isLoading = true;
-    postForm.resetForm();
+    this.postForm.reset();
   }
 
   getFormError(code: number) {

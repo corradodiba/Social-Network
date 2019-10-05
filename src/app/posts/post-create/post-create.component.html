@@ -3,9 +3,8 @@
     <mat-form-field>
       <input
         matInput
-        type="text"
         name="title"
-        [ngModel]="postToEdit.title"
+        [ngModel]="postToEdit?.title"
         required
         minlength="3"
         placeholder="Post Title"
@@ -17,7 +16,7 @@
         matInput
         rows="4"
         name="content"
-        [ngModel]="postToEdit.content"
+        [ngModel]="postToEdit?.content"
         required
         placeholder="Post Content"
         #content="ngModel"></textarea>

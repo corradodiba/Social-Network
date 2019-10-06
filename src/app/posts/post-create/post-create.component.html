@@ -17,7 +17,7 @@
       </textarea>
       <mat-error *ngIf="postForm.get('content').invalid">Please enter a post title.</mat-error>
     </mat-form-field>
-    <div class="image-preview" *ngIf="imagePreview && imagePreview !== ''">
+    <div class="image-preview" *ngIf="imagePreview && imagePreview !== '' && postForm.get('image').valid">
       <img [src]="imagePreview" [alt]="postForm.value?.title">
     </div>
     <div class="controller-actions">

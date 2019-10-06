@@ -10,3 +10,12 @@ input[type="file"] {
 button {
   margin: 0.1rem;
 }
+
+.image-preview {
+  height: 4rem;
+  margin: 0.5rem auto;
+}
+
+.image-preview img {
+  height: 100%;
+}

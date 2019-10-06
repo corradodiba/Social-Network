@@ -1,9 +1,9 @@
 const express = require("express");
 const bodyParse = require("body-parser");
 const mongoose = require("mongoose");
+const multer = require("multer");
 
 const postsRouter = require("./router/posts");
-
 
 mongoose.connect("mongodb+srv://corrado:yhhGomWiaUGUNX9I@cluster0-f6xao.mongodb.net/social-network?retryWrites=true&w=majority")
   .then(() => {

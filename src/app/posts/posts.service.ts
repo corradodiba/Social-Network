@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 
 
 import { Post } from './post.model';
-import { PortalHostDirective } from '@angular/cdk/portal';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +25,7 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.http.get<{message: string, post: {_id: string, title: string, content: string}}>(
+    return this.http.get<{message: string, post: {_id: string, title: string, content: string, imagePath: string}}>(
       'http://localhost:3000/api/posts/' + id
     );
   }
@@ -41,7 +40,8 @@ export class PostsService {
           return {
             title: post.title,
             content: post.content,
-            id: post._id
+            id: post._id,
+            imagePath: post.imagePath
           };
         });
       }))
@@ -62,12 +62,13 @@ export class PostsService {
     postData.append('content', contentPost);
     postData.append('image', imagePost, titlePost);
 
-    this.http.post<{message: string, postId: string}>('http://localhost:3000/api/posts', postData)
+    this.http.post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
       .subscribe((data) => {
         const post: Post = {
-          id: data.postId,
-          title: titlePost,
-          content: contentPost
+          id: data.post.id,
+          title: data.post.title,
+          content: data.post.content,
+          imagePath: data.post.imagePath
         };
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
@@ -76,7 +77,7 @@ export class PostsService {
   }
 
   updatePost(postId: string, postTitle: string, postContent: string) {
-    const post: Post = { id: postId, title: postTitle, content: postContent };
+    const post: Post = { id: postId, title: postTitle, content: postContent, imagePath: null };
     this.http
       .put('http://localhost:3000/api/posts/' + postId, post)
       .subscribe(response => {

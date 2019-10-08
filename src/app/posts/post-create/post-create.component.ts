@@ -54,7 +54,8 @@ export class PostCreateComponent implements OnInit {
             this.postToEdit = {
               id: data.post._id,
               title: data.post.title,
-              content: data.post.content
+              content: data.post.content,
+              imagePath: data.post.imagePath
             };
           });
       } else {

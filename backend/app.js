@@ -5,7 +5,10 @@ const multer = require("multer");
 
 const postsRouter = require("./router/posts");
 
-mongoose.connect("mongodb+srv://corrado:yhhGomWiaUGUNX9I@cluster0-f6xao.mongodb.net/social-network?retryWrites=true&w=majority")
+
+// mongoose.connect("mongodb+srv://corrado:yhhGomWiaUGUNX9I@cluster0-f6xao.mongodb.net/social-network?retryWrites=true&w=majority")
+
+mongoose.connect("mongodb://localhost:27017/weather", { useNewUrlParser: true })
   .then(() => {
     console.log("Connected to database")
   })

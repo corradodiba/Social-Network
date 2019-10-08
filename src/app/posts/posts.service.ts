@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { Post } from './post.model';
-import { element } from 'protractor';
 import { Router } from '@angular/router';
+
+
+import { Post } from './post.model';
+import { PortalHostDirective } from '@angular/cdk/portal';
 
 @Injectable({
   providedIn: 'root'
@@ -54,15 +56,19 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(titlePost: string, contentPost: string) {
-    const post: Post = {
-      id: null,
-      title: titlePost,
-      content: contentPost
-    };
+  addPost(titlePost: string, contentPost: string, imagePost: File) {
+    const postData = new FormData();
+    postData.append('title', titlePost);
+    postData.append('content', contentPost);
+    postData.append('image', imagePost, titlePost);
 
-    this.http.post<{message: string}>('http://localhost:3000/api/posts', post)
-      .subscribe((postData) => {
+    this.http.post<{message: string, postId: string}>('http://localhost:3000/api/posts', postData)
+      .subscribe((data) => {
+        const post: Post = {
+          id: data.postId,
+          title: titlePost,
+          content: contentPost
+        };
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
         this.navigateOnRouter('');

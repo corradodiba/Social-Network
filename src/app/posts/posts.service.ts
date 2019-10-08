@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+
+
 import { Post } from './post.model';
-import { element } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +15,17 @@ export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<Post[]>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
+
+  navigateOnRouter(path: string) {
+    if (path === '') {
+      path = '/';
+    }
+    this.router.navigate([path]);
+  }
 
   getPost(id: string) {
-    return this.http.get<{message: string, post: {_id: string, title: string, content: string}}>(
+    return this.http.get<{message: string, post: {_id: string, title: string, content: string, imagePath: string}}>(
       'http://localhost:3000/api/posts/' + id
     );
   }
@@ -31,7 +40,8 @@ export class PostsService {
           return {
             title: post.title,
             content: post.content,
-            id: post._id
+            id: post._id,
+            imagePath: post.imagePath
           };
         });
       }))
@@ -46,22 +56,28 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(titlePost: string, contentPost: string) {
-    const post: Post = {
-      id: null,
-      title: titlePost,
-      content: contentPost
-    };
+  addPost(titlePost: string, contentPost: string, imagePost: File) {
+    const postData = new FormData();
+    postData.append('title', titlePost);
+    postData.append('content', contentPost);
+    postData.append('image', imagePost, titlePost);
 
-    this.http.post<{message: string}>('http://localhost:3000/api/posts', post)
-      .subscribe((postData) => {
+    this.http.post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
+      .subscribe((data) => {
+        const post: Post = {
+          id: data.post.id,
+          title: data.post.title,
+          content: data.post.content,
+          imagePath: data.post.imagePath
+        };
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
+        this.navigateOnRouter('');
       });
   }
 
   updatePost(postId: string, postTitle: string, postContent: string) {
-    const post: Post = { id: postId, title: postTitle, content: postContent };
+    const post: Post = { id: postId, title: postTitle, content: postContent, imagePath: null };
     this.http
       .put('http://localhost:3000/api/posts/' + postId, post)
       .subscribe(response => {
@@ -70,6 +86,7 @@ export class PostsService {
         postUpdated[oldPostId] = post;
         this.posts = postUpdated;
         this.postsUpdated.next([...this.posts]);
+        this.navigateOnRouter('');
       });
   }
 

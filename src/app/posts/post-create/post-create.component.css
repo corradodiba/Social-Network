@@ -2,3 +2,20 @@ mat-form-field,
 textarea {
   width: 100%;
 }
+
+input[type="file"] {
+  display: none;
+}
+
+button {
+  margin: 0.1rem;
+}
+
+.image-preview {
+  height: 4rem;
+  margin: 0.5rem auto;
+}
+
+.image-preview img {
+  height: 100%;
+}

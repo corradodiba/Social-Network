@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 
 
 import { Post } from './post.model';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { ɵELEMENT_PROBE_PROVIDERS__POST_R3__ } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -76,13 +78,34 @@ export class PostsService {
       });
   }
 
-  updatePost(postId: string, postTitle: string, postContent: string) {
-    const post: Post = { id: postId, title: postTitle, content: postContent, imagePath: null };
+  updatePost(postId: string, postTitle: string, postContent: string, postImage: File | string) {
+    let postData: Post | FormData;
+
+    if (typeof postImage === 'object') {
+      postData = new FormData();
+      postData.append('id', postId),
+      postData.append('title', postTitle);
+      postData.append('content', postContent);
+      postData.append('image', postImage);
+    } else {
+      postData = {
+        id: postId,
+        title: postTitle,
+        content: postContent,
+        imagePath: postImage
+      };
+    }
     this.http
-      .put('http://localhost:3000/api/posts/' + postId, post)
+      .put('http://localhost:3000/api/posts/' + postId, postData)
       .subscribe(response => {
         const postUpdated = this.posts;
-        const oldPostId = postUpdated.findIndex(elementPost => elementPost.id === post.id);
+        const oldPostId = postUpdated.findIndex(elementPost => elementPost.id === postId);
+        const post: Post = {
+          id: postId,
+          title: postTitle,
+          content: postContent,
+          imagePath: ''
+        };
         postUpdated[oldPostId] = post;
         this.posts = postUpdated;
         this.postsUpdated.next([...this.posts]);

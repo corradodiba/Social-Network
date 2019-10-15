@@ -4,7 +4,8 @@ const bodyParse = require("body-parser");
 const mongoose = require("mongoose");
 const multer = require("multer");
 
-const postsRouter = require("./router/posts");
+const postsRoutes = require("./router/posts");
+const authRoutes = require("./router/auth");
 
 
 // mongoose.connect("mongodb+srv://corrado:yhhGomWiaUGUNX9I@cluster0-f6xao.mongodb.net/social-network?retryWrites=true&w=majority")
@@ -38,6 +39,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/posts", postsRouter);
+app.use("/api/posts", postsRoutes);
+app.use("/api/auth", authRoutes);
 
 module.exports = app;

@@ -6,3 +6,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 mat-spinner {
   margin: auto;
 }
+
+mat-form-field,
+textarea {
+  width: 100%;
+}

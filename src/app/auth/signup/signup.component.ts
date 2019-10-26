@@ -20,6 +20,6 @@ export class SignupComponent {
       password: form.value.password
     };
 
-    this.authService.onCreateUser(authData);
+    this.authService.createUser(authData);
   }
 }

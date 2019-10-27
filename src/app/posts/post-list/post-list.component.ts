@@ -14,9 +14,10 @@ import { AuthService } from 'src/app/auth/auth.service';
 
 export class PostListComponent implements OnDestroy, OnInit {
 
-  isAuthenticated = false;
+  private authListenerSubs = new Subscription();
   private postsSub: Subscription;
   posts: Post[] = [];
+  isAuthenticated = false;
   isLoading = false;
   totalPosts = 10;
   postForPage = 2;
@@ -27,6 +28,7 @@ export class PostListComponent implements OnDestroy, OnInit {
   constructor(public postsService: PostsService, private authService: AuthService) {}
 
   ngOnInit() {
+
     this.postsService.getPosts(this.postForPage, this.currentPage);
     this.isLoading = true;
     this.postsSub = this.postsService.getPostUpdateListener()
@@ -36,6 +38,9 @@ export class PostListComponent implements OnDestroy, OnInit {
         this.posts = postData.posts;
       });
     this.isAuthenticated = this.authService.isAuth();
+    this.authListenerSubs = this.authService.getAuthStatusListener().subscribe(isAuthenticated => {
+      this.isAuthenticated = isAuthenticated;
+    });
   }
 
   onDelete(post: Post) {
@@ -55,5 +60,6 @@ export class PostListComponent implements OnDestroy, OnInit {
 
   ngOnDestroy() {
     this.postsSub.unsubscribe();
+    this.authListenerSubs.unsubscribe();
   }
 }

@@ -6,8 +6,6 @@ import { Router } from '@angular/router';
 
 
 import { Post } from './post.model';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
-import { ɵELEMENT_PROBE_PROVIDERS__POST_R3__ } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'

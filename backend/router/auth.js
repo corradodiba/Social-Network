@@ -30,7 +30,7 @@ router.post("/signup", (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-  let fechedData = {};
+  let fetchedUser;
   const email = req.body.email;
   const password = req.body.password;
   User.findOne({ email: email }).then(user => {
@@ -39,7 +39,7 @@ router.post('/login', (req, res, next) => {
         message: 'Auth Failed!'
       });
     }
-    fechedData = user;
+    fetchedUser = user;
     return bcrypt.compare(password, user.password);
   })
   .then(result => {
@@ -50,8 +50,8 @@ router.post('/login', (req, res, next) => {
     }
     const buffer = '#k5vdo%GhWm^EbNB&!adCYFb*RPM$gjXmNOJ02%ZphyY&lh$cWbCz9Kl1Q!8*Q7qb81E335BqXMC6^#owkHmWDm9z62PhD%3fU%';
     const token = jwt.sign({
-      email: fechedData.email,
-      id: fechedData._id
+      email: fetchedUser.email,
+      id: fetchedUser._id
     }, buffer, { expiresIn: '1h'});
     res.status(200).json({
       token: token

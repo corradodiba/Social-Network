@@ -20,7 +20,6 @@ export class LoginComponent {
       email: form.value.email,
       password: form.value.password
     };
-
     this.authService.loginUser(authData);
   }
 }

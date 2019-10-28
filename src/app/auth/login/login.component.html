@@ -26,6 +26,7 @@
     </mat-form-field>
     <div class="controller-actions">
         <button
+        *ngIf="!isLoading"
         mat-raised-button
         color="accent"
         type="submit">Login

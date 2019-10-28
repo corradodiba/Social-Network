@@ -25,7 +25,7 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.http.get<{message: string, post: {_id: string, title: string, content: string, imagePath: string}}>(
+    return this.http.get<{message: string, post: {_id: string, title: string, content: string, imagePath: string, author: string}}>(
       'http://localhost:3000/api/posts/' + id
     );
   }
@@ -43,7 +43,8 @@ export class PostsService {
                     title: post.title,
                     content: post.content,
                     id: post._id,
-                    imagePath: post.imagePath
+                    imagePath: post.imagePath,
+                    author: post.author
                   };
                 }),
           counterPosts: postsData.counterPosts
@@ -89,7 +90,8 @@ export class PostsService {
         id: postId,
         title: postTitle,
         content: postContent,
-        imagePath: postImage
+        imagePath: postImage,
+        author: null
       };
     }
     this.http

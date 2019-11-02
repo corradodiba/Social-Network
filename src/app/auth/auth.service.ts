@@ -41,7 +41,11 @@ export class AuthService {
       email: authData.email,
       password: authData.password
     })
-    .subscribe();
+    .subscribe(() => {
+      this.router.navigate(['/']);
+    }, err => {
+      this.authStatusListener.next(false);
+    });
   }
 
   loginUser(authData: AuthData) {

@@ -20,10 +20,9 @@ router.post("/signup", (req, res, next) => {
           result: result
         });
       })
-      .catch(err => {
-        console.log(err);
+      .catch(() => {
         res.status(500).json({
-          message: err
+          message: 'Invalid Authentication Credentials!'
         });
       });
   });
@@ -36,7 +35,7 @@ router.post('/login', (req, res, next) => {
   User.findOne({ email: email }).then(user => {
     if (!user) {
       res.status(401).json({
-        message: 'Auth Failed!'
+        message: 'Invalid Authentication Credentials!'
       });
     }
     fetchedUser = user;
@@ -45,7 +44,7 @@ router.post('/login', (req, res, next) => {
   .then(result => {
     if (!result) {
       return res.status(401).json({
-        message: 'Auth Failed!'
+        message: 'Invalid Authentication Password!'
       });
     }
     const buffer = '#k5vdo%GhWm^EbNB&!adCYFb*RPM$gjXmNOJ02%ZphyY&lh$cWbCz9Kl1Q!8*Q7qb81E335BqXMC6^#owkHmWDm9z62PhD%3fU%';
@@ -59,9 +58,9 @@ router.post('/login', (req, res, next) => {
       id: fetchedUser.id
     });
   })
-  .catch(err => {
+  .catch(() => {
     res.status(401).json({
-      message: 'Auth Failed!'
+      message: 'Invalid Authentication Credentials!'
     });
   });
 });

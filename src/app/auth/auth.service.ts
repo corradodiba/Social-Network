@@ -5,6 +5,9 @@ import { AuthData } from './auth-data.model';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 
+import { environment } from '../../environments/environment';
+
+const URL = `${environment.apiUrl}/auth/`;
 @Injectable({
   providedIn: 'root'
 })
@@ -37,7 +40,7 @@ export class AuthService {
   }
 
   createUser(authData: AuthData) {
-    this.http.post('http://localhost:3000/api/auth/signup', {
+    this.http.post(URL + 'signup', {
       email: authData.email,
       password: authData.password
     })
@@ -49,7 +52,7 @@ export class AuthService {
   }
 
   loginUser(authData: AuthData) {
-    this.http.post<{token: string, expiresIn: number, id: string}>('http://localhost:3000/api/auth/login', authData)
+    this.http.post<{token: string, expiresIn: number, id: string}>(URL + 'login', authData)
       .subscribe(response => {
         const token = response.token;
         const id = response.id;
